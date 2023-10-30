@@ -1,0 +1,5 @@
+bs4==0.0.1
+httpx==0.23.3
+httpx[http2]
+json5==0.9.11
+lzstring==1.0.4
