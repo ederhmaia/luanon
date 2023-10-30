@@ -2,6 +2,8 @@ $${\textbf{Luanon} \space \textbf{Python} \space \textbf{Library}}$$
 
 $${An \space intellectual \space product \space of \space \color{lightyellow}Lua \space Non \space \color{lightblue}Team}$$
 
+$${\textbf{©2023 LuaNonTeam. All Rights Reserved.}}$$
+
 ---
 
 # Project Tree
