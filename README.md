@@ -6,23 +6,10 @@
 
 # Project Tree
 
-+ cloudscraper (`can't update`)
-    + Author: `@luanon404`, `@To_Duy`
-    + js: Server uses jsdom to run JS script.
-    + python: Solves Cloudflare by using the requests library.
-
-+ hcaptcha (`can't update`)
-    + Author: `@luanon404`
-    + Solves hCaptcha by using the requests library.
-
-+ image (`can't update`)
-    + Author: `@luanon404`
-    + Image processor for an auto AI sub-library (future).
-
-+ js_runtime (`will merge into with jsdom in future`)
-    + Author: `@luanon404`
-    + Run JS in Python.
-
-+ webdriver (`working`)
-    + Author: `@luanon404`
-    + moe_moe: Android WebDriver client
+| Library      | Status                  | Author(s)           | Description                                                                          |
+| ------------ | ----------------------- | ------------------- | ------------------------------------------------------------------------------------ |
+| cloudscraper | Maintenance             | @luanon404, @To_Duy | Server uses jsdom to run JS script. Solves Cloudflare by using the requests library. |
+| hcaptcha     | Maintenance             | @luanon404          | Solves hCaptcha by using the requests library.                                       |
+| image        | Maintenance             | @luanon404          | Image processor for an auto AI sub-library (future-task).                            |
+| js_runtime   | Future Merge with jsdom | @luanon404          | Run JS in Python syntax.                                                             |
+| webdriver    | Working                 | @luanon404          | Android WebDriver client                                                             |
