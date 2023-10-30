@@ -4,20 +4,25 @@
     <strong>An intellectual product of the Luanon team</strong>
 </div>
 
-# Tree
+# Project Tree
 
-+ cloudscraper `@luanon404` (`can't update`)
++ cloudscraper (`can't update`)
+    + Author: `@luanon404`, `@To_Duy`
     + js: Server uses jsdom to run JS script.
     + python: Solves Cloudflare by using the requests library.
 
-+ hcaptcha `@luanon404` (`can't update`)
++ hcaptcha (`can't update`)
+    + Author: `@luanon404`
     + Solves hCaptcha by using the requests library.
 
-+ image `@luanon404` (`can't update`)
++ image (`can't update`)
+    + Author: `@luanon404`
     + Image processor for an auto AI sub-library (future).
 
-+ js_runtime `@luanon404` (`will merge into with jsdom in future`)
++ js_runtime (`will merge into with jsdom in future`)
+    + Author: `@luanon404`
     + Run JS in Python.
 
-+ webdriver `@luanon404` (`working`)
++ webdriver (`working`)
+    + Author: `@luanon404`
     + moe_moe: Android WebDriver client
