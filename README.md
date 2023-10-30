@@ -6,6 +6,8 @@ $${\textbf{©2023 LuaNonTeam. All Rights Reserved.}}$$
 
 ---
 
+![Python](./assets/python-badge.svg)
+
 # Project Tree
 
 | Library      | Status                  | Author(s)           | Description                                                                          |
