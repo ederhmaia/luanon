@@ -1,8 +1,8 @@
-<div align="center">
-    <strong>Luanon Python Library</strong>
-    <br/>
-    <strong>An intellectual product of the Luanon team</strong>
-</div>
+$${\textbf{Luanon} \space \textbf{Python} \space \textbf{Library}}$$
+
+$${An \space intellectual \space product \space of \space \color{lightyellow}Lua \space Non \space \color{lightblue}Team}$$
+
+---
 
 # Project Tree
 
