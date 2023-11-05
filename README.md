@@ -4,17 +4,15 @@ $${An \space intellectual \space product \space of \space \color{lightyellow}Lua
 
 ---
 
-- Supported Python version: ![Python](./assets/python-badge.svg)
-
 # Project Tree
 
-| Library      | Status                  | Author(s)           | Description                                               |
-|--------------|-------------------------|---------------------|-----------------------------------------------------------|
-| cloudscraper | Maintenance             | @luanon404, @To_Duy | Bypass Cloudflare by using the requests library.          |
-| hcaptcha     | Maintenance             | @luanon404          | Bypass hCaptcha by using the requests library.            |
-| image        | Maintenance             | @luanon404          | Image processor for an auto AI sub-library (future-task). |
-| js_runtime   | Future Merge with jsdom | @luanon404          | Run JS in Python syntax.                                  |
-| webdriver    | Working                 | @luanon404          | Android WebDriver client                                  |
+| Module       | Python  | Status                  | Author(s)           | Description                                               |
+|--------------|---------|-------------------------|---------------------|-----------------------------------------------------------|
+| cloudscraper | >= 3.12 | Maintenance             | @luanon404, @To_Duy | Bypass Cloudflare by using the requests library.          |
+| hcaptcha     | >= 3.12 | Maintenance             | @luanon404          | Bypass hCaptcha by using the requests library.            |
+| image        | >= 3.12 | Maintenance             | @luanon404          | Image processor for an auto AI sub-library (future-task). |
+| js_runtime   | ?       | Future Merge with jsdom | @luanon404          | Run JS in Python syntax.                                  |
+| webdriver    | ?       | Working                 | @luanon404          | Android WebDriver client                                  |
 
 ---
 
