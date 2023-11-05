@@ -54,7 +54,8 @@ class CfResponseBody(CfBaseBody):
 """ Sài seo?
 
 value = "test"
-cf_response_body = CfResponseBody(value) -> test
+c_ray = "251"
+cf_response_body = CfResponseBody(value, c_ray) -> test
 encoded_value = cf_response_body.encode() -> encode
 decoded_value = cf_response_body.decode() -> decode
 cf_response_body -> decode

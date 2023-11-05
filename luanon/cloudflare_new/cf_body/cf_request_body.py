@@ -39,7 +39,8 @@ class CfRequestBody(CfBaseBody):
 """ Sài seo?
 
 value = "test"
-cf_request_body = CfRequestBody(value) -> test
+secret_key = "banana"
+cf_request_body = CfRequestBody(value, secret_key) -> test
 encoded_value = cf_request_body.encode() -> encode
 decoded_value = cf_request_body.decode() -> decode
 cf_request_body -> decode
