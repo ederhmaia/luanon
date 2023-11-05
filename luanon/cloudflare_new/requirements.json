@@ -1,0 +1,6 @@
+{
+    "python": [
+        "requests==2.31.0",
+        "lzstring==1.0.4"
+    ]
+}
