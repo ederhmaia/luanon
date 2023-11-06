@@ -22,10 +22,8 @@ class CfResponseBody(CfBaseBody):
 
     @override
     def encode(self) -> str:
-        if not self.c_ray.endswith("_0"):
-            self.c_ray += "_0"
         num_1 = 32
-        for char in self.c_ray:
+        for char in self.c_ray + "_0":
             num_1 ^= ord(char)
         result = []
         for index, char in enumerate(self.value):
@@ -38,11 +36,9 @@ class CfResponseBody(CfBaseBody):
     @override
     def decode(self) -> str:
         binary = base64.b64decode(self.value).decode("latin1")
-        if not self.c_ray.endswith("_0"):
-            self.c_ray += "_0"
         result = []
         num_1 = 32
-        for char in self.c_ray:
+        for char in self.c_ray + "_0":
             num_1 ^= ord(char)
         for index, char in enumerate(binary):
             num_2 = ord(char)
@@ -54,10 +50,21 @@ class CfResponseBody(CfBaseBody):
 """ Sài seo?
 
 value = "test"
-c_ray = "251"
-cf_response_body = CfResponseBody(value, c_ray) -> test
-encoded_value = cf_response_body.encode() -> encode
-decoded_value = cf_response_body.decode() -> decode
-cf_response_body -> decode
+c_ray = "821cb54619bf1089"
+
+cf_response_body = CfResponseBody(value, c_ray)
+print(cf_response_body)
+# test
+
+encoded_value = cf_response_body.encode()
+print(encoded_value)
+# wrTDxQ==
+
+decoded_value = cf_response_body.decode()
+print(decoded_value)
+# test
+
+print(cf_response_body)
+# test
 
 """

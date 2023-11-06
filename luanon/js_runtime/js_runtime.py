@@ -1,4 +1,5 @@
 import os
+import shutil
 import threading
 import subprocess
 from typing import Any
@@ -38,7 +39,7 @@ class JSRuntime:
         with open(path, "w", encoding="UTF-8") as file:
             file.write(data)
 
-    def call(self, name: str, args: list, max_wait: int = 30, promise: bool = False) -> str:
+    def call(self, name: str, args: list = [], max_wait: int = 30, promise: bool = False) -> str:
         tag = str(id(self))
         filename = os.path.join(current_path, "__memory__", f"{tag}.txt")
         data = [
@@ -65,5 +66,5 @@ class JSRuntime:
             result = (stdout + stderr).decode("UTF-8").strip()
         finally:
             timer.cancel()
-        os.remove(filename)
+        shutil.rmtree(os.path.dirname(filename))
         return result

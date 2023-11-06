@@ -1,4 +1,4 @@
-module.paths.push(require("child_process").execSync('npm root -g').toString().trim())
+module.paths.push(require("child_process").execSync("npm root -g").toString().trim())
 
 const { readFile } = require("fs");
 const { Script } = require("vm");

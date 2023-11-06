@@ -8,7 +8,8 @@ import requests
 import traceback
 
 from typing import override
-from . import cf_exception
+from . import cf_util, cf_exception
+from .cf_challenge import CfChallenge
 
 
 class CloudflareScraper(requests.Session):
@@ -29,15 +30,19 @@ class CloudflareScraper(requests.Session):
 
     @override
     def request(self, method, url, **kwargs) -> requests.Response:
-        response = super().request(method=method, url=url, **kwargs)
-        if not self._check_cloudflare_enabled(response):
-            return response
+        base_response = super().request(method=method, url=url, **kwargs)
+        if not self._check_cloudflare_enabled(base_response):
+            return base_response
         for retry in range(self.cf_max_retries):
             try:
-                if not isinstance(response, requests.Response):
-                    response = super().request(method=method, url=url, **kwargs)
-                print(response)
+                response = super().request(method=method, url=url, **kwargs)
+                solver = CfChallenge.render(self, super(), response)
+                solver.solve_challenge()
+                if solver.is_solved:
+                    # Success
+                    return solver.response
             except Exception:
                 if self.cf_debug:
                     traceback.print_exc()
-            response = None
+        # Fail
+        return base_response

@@ -10,4 +10,5 @@ import json
 with open("requirements.json") as file:
     packages = json.load(file)["python"]
     packages.insert(0, "install")
+    packages.insert(1, "--force-reinstall")
     pip.main(packages)

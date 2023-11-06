@@ -1,6 +1,7 @@
 {
     "python": [
+        "json5==0.9.14",
         "requests==2.31.0",
-        "lzstring==1.0.4"
+        "beautifulsoup4==4.12.2"
     ]
 }
