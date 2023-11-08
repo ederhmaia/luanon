@@ -3,13 +3,10 @@
     Ngày tạo: 11/06/2023
     ©2023 LuaNonTeam
 """
-import base64
-import re
 
 import requests
 
 from dataclasses import dataclass
-
 from luanon.cloudflare_new import cf_util
 from luanon.cloudflare_new.cf_body import CfRequestBody, CfResponseBody
 
@@ -36,6 +33,7 @@ class CfChallenge:
             print(f"Type: {self.content["_cf_chl_opt"]["cType"]}")
 
         base_challenge = self.session.get(self.content["cpo"])
+        # open("a.js", "w").write(base_challenge.text)
         match self.content["_cf_chl_opt"]["cType"]:
             case "managed":
                 data = cf_util.parse_data(base_challenge, self.content["_cf_chl_opt"])
@@ -76,7 +74,7 @@ class CfChallenge:
                 luanon_challenge = self.session.post(data["server_post_url"], data=body_encoded, headers=headers)
                 print(luanon_challenge.text)
                 luanon_challenge_body = CfResponseBody(luanon_challenge.text, c_ray=self.content["_cf_chl_opt"]["cRay"])
-                print(22222222,self.content["_cf_chl_opt"]["cRay"],luanon_challenge_body.decode())
+                print(22222222, self.content["_cf_chl_opt"]["cRay"], luanon_challenge_body.decode())
             case _:
                 # Hmm
                 return None
