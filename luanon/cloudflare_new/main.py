@@ -1,9 +1,13 @@
 # from luanon.cloudflare_new.cf_body.cf_request_body import CfRequestBody
 # print(CfRequestBody("+nwoXoboloGo9c4Sc4DoQK9VT4lKc0o4iw4zd426$6CK2P4Y94cz7oce4Jo4W4-4YDq443bv44842Q4a4UIQ4F0o170M4CYb1w49wn4a3w4E4FjBw4xPQH34QLmelY4NzCQ4CKc8A7Fo4A4CS$ASKXrkoHh47nh4c+eh44p4ci4U-jm7dQZ-CQ0hv0y+F5B1Pxr+HA42KHf+oHvE9+scHJK4F$4PLz2FCqghxze2x4B0KH1P4nBFK5E4H1aJ44jw-PhYQoz3QHCSm4dYQ-K7oKuMI3YCueYQuuvhFPuwL7OkoLD34phrkaGBP+P$Jl97K9KB$WTIi46K112MQC6hAJ4xwAwn+Kz42lldQ4FDR9W02ww4H9NKQMo4MiaQxonQnEc0L4nl1WhHQh9$k2KnAoAK$sAkS24e27VQ4Q3WXvwKENP7nelvm2w4hCrNc6e-nGVQ42c867P23NQA79cnBANqQF4k0HIS1z$S5AKAFPPN4oUW5R9W0xe497AMNz1KrfdgqiVhCehwk+JAM0l3dX9bKxHsPmwTxNRrK6Xx9lEP0Xflk1HNxd2cTa$n0TIMhqgCxavHPVInhXNA$OE6wBA0o$u$$u$n4hqrhq8FHJYY4ZLON4CMuqeT$N4WkwuAvK1HaY6IiUES1cAC8P0BCVE+2HdNxf4u7U5P2b9xbkKax2bCLe2oCh2Ykdgb91Bs237$823kbm2i7oMHJNQ545PqrHnNczooFQC4oSKEIA1$Wcl0zKvjCouv5LUa$BlUkQ5c4v9P6oG$wIcBFiSb22kkKM247$$f5FQfcAlJj2eFKT2FE4$f$QKXQo-dNf5S784$+QC4KL1m95AWE7BcQE7z+d29w2zwdo2HKI7ABkA$6dzqQq1sc-RKv4K+BPb92KT4G-dec0SKvxTRi$I0AvmcA+oT1fP0AlPeBwIokwjcoFQ7vW+WvdJMok1zCQhc$Rij4KRKhcAcw8HCko$3mFQKcn7oTHC+WCHIN4blP7vUA$CdDookbPqIYI0v5N4zxiDB3qo0KnHCAvkLFq6w$ac4rxQL7j1zC0iFiwqR7akoKcoEBs15hHPQAAw2db7oKHoc4w75Fsl$Bkdqs-QKox794l921QzH$Cw0xFL1s20AwTclNqR7IkofHC7$lc$lUUlzkwloKNQj4AN4$xwPQZ24Cdx9Z+ozFieBr2a4ZecJhoz4+Yqqy5Md-27YKB3k1lBFu4n7IlAWbLaCo0FiNQu7OE0YHd0oAc$czr7IcGrH$kzv-wE1$15wqN-MEWW4r9dgQ5wQV7zFKP4$A$WckA3z7zS7loncHafFkjadwEWl272daI-+qaIv$4j9PYKfx4Y0z9wA$z2k9ok9ZFwAc7-JV2zJ00cd4EjH7V4w2MJ0kH$wqj2i94ux0Hnd4o6olI0RePZ0HwMF5hDrFaE0u9wCQK1WPluxkSoXxkAWzIPIqecl2Wh2lRK827EHqzGc4uHKcQJCn2o4n5Cp$HnYqxcecarorMoNsJL1g1yOdx9wklTekU9N3An5uc-LZNxA34cT3Co4XnYMQ1AFi7oWXwoav6I$klnq2HjF+341lbdm4M1jH7+4L4roBc76aMQvq22i1W7JE0bo$d6zA6IF74HR0oRHh4af17WMQToQ2rK$FiF4$Q127H1HnE02274sFwE-9oMd+ckw59W0KG27He4A7J6ojqJG5C49KYQvQZ4A4rcw$4go5HCc$27klukD2e24P0C0jHmHP7WM42KCwZcANJFo0KjQk2$N44", "4Hc271F9wCN6P+EhQqALlb-S0VeYkUMRodIx$v3fWBaTJD8pKzsmijuynXrG5ZOgt").decode())
-from luanon.cloudflare_new.cf_main import CloudflareScraper
+# from luanon.cloudflare_new.cf_main import CloudflareScraper
+#
+# if __name__ == "__main__":
+#     cf = CloudflareScraper(cf_max_retries=1, cf_debug=True)
+#     resp = cf.get("https://nowsecure.nl/")
+#     print(f"Status code: {resp.status_code}")
+#     print(f"Source: {resp.text}")
+from jsdom_runtime import JSDomRuntime
 
-if __name__ == "__main__":
-    cf = CloudflareScraper(cf_max_retries=1, cf_debug=True)
-    resp = cf.get("https://nowsecure.nl/")
-    print(f"Status code: {resp.status_code}")
-    print(f"Source: {resp.text}")
+a = JSDomRuntime(script="window._cf_chl_opt=5").eval("window._cf_chl_opt")
+print(a)

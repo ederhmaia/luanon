@@ -1,5 +1,10 @@
+"""
+    Tác giả: GnU
+    Ngày tạo: 11/09/2023
+    ©2023 LuaNonTeam
+"""
+
 import os
-import shutil
 import threading
 import subprocess
 from typing import Any
@@ -30,7 +35,7 @@ class JSRuntime:
                 case _:
                     js_args.append(str(arg))
 
-        return f"{name}({','.join([str(arg) for arg in args])})"
+        return f"{name}({",".join([str(arg) for arg in args])})"
 
     @staticmethod
     def _write_data_to_file(data: str, path: str) -> None:
@@ -39,7 +44,7 @@ class JSRuntime:
         with open(path, "w", encoding="UTF-8") as file:
             file.write(data)
 
-    def call(self, name: str, args: list = [], max_wait: int = 30, promise: bool = False) -> str:
+    def call(self, name: str, args: list = (), max_wait: int = 30, promise: bool = False) -> str:
         tag = str(id(self))
         filename = os.path.join(current_path, "__memory__", f"{tag}.txt")
         data = [
@@ -66,5 +71,8 @@ class JSRuntime:
             result = (stdout + stderr).decode("UTF-8").strip()
         finally:
             timer.cancel()
-        shutil.rmtree(os.path.dirname(filename))
+        os.remove(filename)
         return result
+
+    def eval(self, script: str) -> str:
+        return self.call(f"(function () {{ return {script} }})")

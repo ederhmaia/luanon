@@ -1,5 +1,10 @@
+"""
+    Tác giả: GnU
+    Ngày tạo: 11/09/2023
+    ©2023 LuaNonTeam
+"""
+
 import os
-import shutil
 import threading
 import subprocess
 from typing import Any
@@ -30,7 +35,7 @@ class JSDomRuntime:
                 case _:
                     js_args.append(str(arg))
 
-        return f"{name}({','.join([str(arg) for arg in args])})"
+        return f"{name}({",".join([str(arg) for arg in args])})"
 
     @staticmethod
     def _write_data_to_file(data: str, path: str) -> None:
@@ -55,7 +60,7 @@ class JSDomRuntime:
         self._write_data_to_file("\n".join(data), filename)
         cmd = [
             "node",
-            os.path.join(current_path, "js_runtime.js"),
+            os.path.join(current_path, "jsdom_runtime.js"),
             f"--filename={filename}"
         ]
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -66,5 +71,8 @@ class JSDomRuntime:
             result = (stdout + stderr).decode("UTF-8").strip()
         finally:
             timer.cancel()
-        shutil.rmtree(os.path.dirname(filename))
+        os.remove(filename)
         return result
+
+    def eval(self, script: str) -> str:
+        return self.call(f"(function () {{ return {script} }})")

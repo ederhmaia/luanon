@@ -4,10 +4,8 @@
     ©2023 LuaNonTeam
 """
 
-from .setup import Setup
-from .js_runtime import JSRuntime
+from .jsdom_runtime import JSDomRuntime
 
 __all__ = [
-    "Setup",
-    "JSRuntime"
+    "JSDomRuntime"
 ]

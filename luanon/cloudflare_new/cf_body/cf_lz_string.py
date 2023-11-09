@@ -17,7 +17,7 @@ class DataObject:
     index: int
 
 
-class LzString:
+class CfLzString:
 
     def __init__(self, secret_key: str) -> None:
         self.secret_key = secret_key

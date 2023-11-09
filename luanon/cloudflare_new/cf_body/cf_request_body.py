@@ -10,7 +10,7 @@ from typing import override
 from dataclasses import dataclass
 
 from .cf_base_body import CfBaseBody
-from .lz_string import LzString
+from .cf_lz_string import CfLzString
 
 
 @dataclass
@@ -25,14 +25,14 @@ class CfRequestBody(CfBaseBody):
     def encode(self) -> str:
         # Convert to javascript JSON object
         json_value = json.dumps(self.value, separators=(",", ":"))
-        lz_string = LzString(self.secret_key)
-        self.value = lz_string.text_to_base64(json_value)
+        cf_lz_string = CfLzString(self.secret_key)
+        self.value = cf_lz_string.text_to_base64(json_value)
         return self.value
 
     @override
     def decode(self) -> dict:
-        lz_string = LzString(self.secret_key)
-        self.value = json.loads(lz_string.base64_to_text(self.value))
+        cf_lz_string = CfLzString(self.secret_key)
+        self.value = json.loads(cf_lz_string.base64_to_text(self.value))
         return self.value
 
 
