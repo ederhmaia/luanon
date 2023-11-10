@@ -6,7 +6,7 @@ module.paths.push(require("child_process").execSync("npm root -g").toString().tr
 
 const { readFile } = require("fs");
 const { Script } = require("vm");
-const { JSDOM, ResourceLoader } = require("jsdom");
+const { JSDOM, ResourceLoader } = require("jsdom-cloudflare");
 const minimist = require("minimist");
 const args = minimist(process.argv.slice(2));
 const filename = args.filename || "";
@@ -14,15 +14,15 @@ const filename = args.filename || "";
 readFile(filename, "UTF-8", async function (err, data) {
     const args = minimist(data.split("\r\n") || data.split("\n"));
     const tag = args.tag || "";
+    const scriptStr = args.scriptStr || "";
     const url = args.url || undefined;
     const referrer = args.referrer || undefined;
     const userAgent = args.userAgent || "Mozilla/5.0";
-    const scriptStr = args.scriptStr || "";
     const scriptCall = args.scriptCall || "";
     const promise = args.promise || "false";
     const loader = new ResourceLoader({ userAgent });
     
-    const dom = new JSDOM(`<!DOCTYPE html><html><head lang="en"><meta charset="UTF-8" /></head><body></body></html>`, {
+    const dom = new JSDOM(args.html || `<!DOCTYPE html><html><head lang="en"><meta charset="UTF-8" /></head><body></body></html>`, {
         url,
         referrer,
         contentType: "text/html",

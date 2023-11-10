@@ -17,8 +17,7 @@ Setup = lambda: base_setup({
         "vm@0.1.0",
         "minimist@1.2.8",
         # JSDOM
-        "https://github.com/luanon404/jsdom/tarball/master",
-        "canvas@2.11.2"
+        "https://github.com/luanon404/jsdom-cloudflare/tarball/main --omit=dev"
     ]
 })
 

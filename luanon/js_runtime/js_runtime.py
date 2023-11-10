@@ -5,20 +5,23 @@
 """
 
 import os
+import shutil
 import threading
 import subprocess
+
 from typing import Any
+from dataclasses import dataclass
 
-current_path = os.path.dirname(__file__)
 
-
+@dataclass
 class JSRuntime:
-
-    def __init__(self, url: str = "", referer: str = "", user_agent: str = "", script: str = "") -> None:
-        self.url = url
-        self.referer = referer
-        self.user_agent = user_agent
-        self.script = script
+    script: str = ""
+    url: str = ""
+    referer: str = ""
+    user_agent: str = ""
+    html: str = ""
+    _current_path: str = os.path.dirname(__file__)
+    _base_js_file: str = "js_runtime.js"
 
     @staticmethod
     def _create_function_call(name: str, *args: Any) -> str:
@@ -44,23 +47,28 @@ class JSRuntime:
         with open(path, "w", encoding="UTF-8") as file:
             file.write(data)
 
-    def call(self, name: str, args: list = (), max_wait: int = 30, promise: bool = False) -> str:
+    def clear_memory(self):
+        shutil.rmtree(os.path.join(self._current_path, "__memory__"))
+
+    def call(self, name: str, args: list = (), max_wait: int = 30, promise: bool = False) -> tuple[str, str]:
         tag = str(id(self))
-        filename = os.path.join(current_path, "__memory__", f"{tag}.txt")
+        filename = os.path.join(self._current_path, "__memory__", f"{tag}.txt")
         data = [
             f"--tag={tag}",
+            f"--scriptStr={self.script}",
             f"--url={self.url}",
             f"--referer={self.referer}",
             f"--userAgent={self.user_agent}",
-            f"--scriptStr={self.script}",
+            f"--html={self.html}",
             f"--scriptCall={self._create_function_call(name, *args)}",
             f"--promise={str(promise).lower()}",
             f"--maxWait={max_wait * 1000}"
         ]
+        data = [d.replace("\n", " ") for d in data]
         self._write_data_to_file("\n".join(data), filename)
         cmd = [
             "node",
-            os.path.join(current_path, "js_runtime.js"),
+            os.path.join(self._current_path, self._base_js_file),
             f"--filename={filename}"
         ]
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -68,11 +76,10 @@ class JSRuntime:
         timer.start()
         try:
             stdout, stderr = proc.communicate()
-            result = (stdout + stderr).decode("UTF-8").strip()
         finally:
             timer.cancel()
         os.remove(filename)
-        return result
+        return stdout.decode("UTF-8").strip(), stderr.decode("UTF-8").strip()
 
-    def eval(self, script: str) -> str:
+    def eval(self, script: str) -> tuple[str, str]:
         return self.call(f"(function () {{ return {script} }})")

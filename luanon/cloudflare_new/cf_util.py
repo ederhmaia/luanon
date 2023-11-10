@@ -11,7 +11,7 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 
-from luanon.js_runtime import JSRuntime
+from luanon.cloudflare_new.jsdom_runtime import JSDomRuntime
 
 
 def get_base_url(url: str) -> str:
@@ -36,7 +36,7 @@ def parse_content(response: requests.Response) -> dict:
         return result
     # json5 cant handle both ' and "
     # Also json5 cant handle `cT: Math.floor(Date.now() / 1000)`
-    _cf_chl_opt = JSRuntime(script="window._cf_chl_opt=" + _cf_chl_opt.group(1)).call("(function () { return window._cf_chl_opt })")
+    _cf_chl_opt, _ = JSDomRuntime().eval(_cf_chl_opt.group(1))
     result["_cf_chl_opt"] = json5.loads(_cf_chl_opt)
 
     quote = r"('|\")"
