@@ -37,18 +37,47 @@ readFile(filename, "UTF-8", async function (err, data) {
     const context = dom.getInternalVMContext();
     let scriptRun = "";
 
+  let sendUrl = null;
+    const win = {
+        objectToJsonString: function (obj) {
+            let result = {};
+            Object.getOwnPropertyNames(obj).forEach(key => {
+                const value = obj[key];
+                switch (typeof value) {
+                    case "undefined":
+                        result[key] = "undefined";
+                        break;
+                    case "function":
+                        result[key] = value.toString();
+                        break;
+                    default:
+                        try {
+                            result[key] = JSON.parse(JSON.stringify(value));
+                        } catch (error) {}
+                        break;
+                }
+            });
+            return JSON.stringify(result);
+        },
+        sendRequest: function (url) {
+      sendUrl = url;
+    console.log('sendRequest called with URL:', url);
+        }
+    }
+    Object.assign(context.window, win);
+
     if (promise === "true") {
-        scriptRun = `${scriptStr}${scriptStr.endsWith(";") ? "" : ";"}${scriptCall}.then((resp) => { window[\`${tag}\`] = resp })`;
-        const script = new Script(scriptRun);
+        const script = new Script(scriptStr);
         script.runInNewContext(context);
         let maxWait = parseInt(args.maxWait) || 30000;
 
-        while (maxWait > 0 && dom.window[tag] === undefined) {
+        while (maxWait > 0 && !sendUrl) {
+        console.log(sendUrl);
             await new Promise((resolve) => setTimeout(resolve, 500));
             maxWait -= 500;
         }
 
-        console.log(dom.window[tag]);
+        console.log(sendUrl);
     } else {
         scriptRun = `${scriptStr}${scriptStr.endsWith(";") ? "" : ";"}window[\`${tag}\`] = ${scriptCall}`;
         const script = new Script(scriptRun);

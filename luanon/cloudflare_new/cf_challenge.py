@@ -23,11 +23,11 @@ class CfChallenge:
     @classmethod
     def render(cls, cloudflare_scraper: "CloudflareScraper", session: requests.Session, response: requests.Response) -> "CfChallenge":
         content = cf_util.parse_content(response)
-        return cls(cloudflare_scraper, session, content, None)
+        return cls(cloudflare_scraper, session, content, response)
 
     @property
     def is_solved(self) -> bool:
-        return isinstance(self.response, requests.Response)
+        return cf_util.check_cloudflare_enabled(self.response)
 
     def solve_challenge(self) -> None:
         if self.cloudflare_scraper.cf_debug:
@@ -35,36 +35,17 @@ class CfChallenge:
             print(self.content["_cf_chl_opt"])
 
         base_challenge = self.session.get(self.content["cpo"])
-        # open("a.js", "w").write(base_challenge.text)
+        open("a.js", "w").write(base_challenge.text)
         match self.content["_cf_chl_opt"]["cType"]:
             case "managed":
                 data = cf_util.parse_data(base_challenge, self.content["_cf_chl_opt"])
-                _cf_chl_ctx, a = JSDomRuntime("""
-                function stringifyObject(obj, visited) {
-                    if (!visited) {
-                        visited = new WeakSet();
-                    }
-
-                    if (visited.has(obj)) {
-                        return {};
-                    }
-
-                    visited.add(obj);
-
-                    const result = {};
-                    for (const [key, value] of Object.entries(obj)) {
-                        if (key === 'enabledPlugin' || typeof value === 'function') {
-                            continue;
-                        }
-
-                        result[key] = typeof value === 'object' ? stringifyObject(value, visited) : value;
-                    }
-
-                    return JSON.stringify(result);
-                }
-                                   """ + f"""
+                print(self.response.text)
+                _cf_chl_ctx, a = JSDomRuntime(f"""
                                 window._cf_chl_opt = {json.dumps({**self.content["_cf_chl_opt"], **{"img": "iVBORw0KGgoAAAANSUhEUgAAACkAAAAwCAIAAAAD28TyAAAABElEQVQAAAABnSTXkQAAAABJRU5ErkJggg=="}})};
-                                """ + base_challenge.text, html='<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /></head><body><form id="challenge-form"></form></body><div id="challenge-stage" style="display: block;"><div id="cf-norobot-container" style="display: flex; align-items: center; justify-content: center;"><input type="button" value="Verify you are human" style="margin: 0px; cursor: pointer;"></div></div></html>').eval("stringifyObject(window)")
+                                """ + base_challenge.text,
+                                              url=cf_util.get_base_url(self.response.url),
+                                              referer=cf_util.get_base_url(self.response.url),
+                                              html=self.response.text).call("", promise=True)
                 print(555555555, _cf_chl_ctx)
                 print(555555555, a)
                 _cf_chl_ctx = CfRequestBody({
