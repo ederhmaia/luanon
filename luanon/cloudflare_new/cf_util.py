@@ -11,6 +11,7 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 
+from luanon.cloudflare_new import cf_exception
 from luanon.cloudflare_new.jsdom_runtime import JSDomRuntime
 
 
@@ -23,6 +24,15 @@ def urljoin(base_url: str, *args: str):
     for url in args:
         base_url = base_url.rstrip("/") + "/" + url.strip("/")
     return base_url
+
+
+def check_cloudflare_enabled(response: requests.Response) -> bool:
+    if '<span class="cf-code-label">Error code <span>1020</span></span>' in response.text:
+        raise cf_exception.CloudflareAccessDenied()
+    if (response.headers.get("server", "") == "cloudflare"
+            and response.status_code == 403):
+        return True
+    return False
 
 
 def parse_content(response: requests.Response) -> dict:
