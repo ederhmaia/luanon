@@ -25,6 +25,10 @@ class JSRuntime:
 
     @staticmethod
     def _create_function_call(name: str, *args: Any) -> str:
+        # Nothing
+        if not name.strip():
+            return ""
+
         js_args = []
 
         for arg in args:
