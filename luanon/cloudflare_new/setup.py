@@ -20,5 +20,3 @@ Setup = lambda: base_setup({
         "https://github.com/luanon404/jsdom-cloudflare/tarball/main --omit=dev"
     ]
 })
-
-Setup()

@@ -30,9 +30,23 @@ def base_setup(packages: dict[str, list[str]]) -> None:
         try:
             cmd = [
                 "npm",
+                "uninstall",
+                "--global",
+                "--force",
+                nodejs_package
+            ]
+            # Maybe I should not use --force?
+            os.system(" ".join(cmd))
+        except Exception:
+            traceback.print_exc()
+    for nodejs_package in nodejs_packages:
+        try:
+            cmd = [
+                "npm",
                 "install",
                 "--global",
                 "--force",
+                "--no-save",
                 nodejs_package
             ]
             # Maybe I should not use --force?

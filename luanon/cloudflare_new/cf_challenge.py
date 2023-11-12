@@ -4,6 +4,7 @@
     ©2023 LuaNonTeam
 """
 import json
+import time
 
 import requests
 
@@ -40,14 +41,18 @@ class CfChallenge:
             case "managed":
                 data = cf_util.parse_data(base_challenge, self.content["_cf_chl_opt"])
                 print(self.response.text)
-                _cf_chl_ctx, a = JSDomRuntime(f"""
-                                window._cf_chl_opt = {json.dumps({**self.content["_cf_chl_opt"], **{"img": "iVBORw0KGgoAAAANSUhEUgAAACkAAAAwCAIAAAAD28TyAAAABElEQVQAAAABnSTXkQAAAABJRU5ErkJggg=="}})};
-                                """ + base_challenge.text,
-                                              url=cf_util.get_base_url(self.response.url),
-                                              referer=cf_util.get_base_url(self.response.url),
-                                              html=self.response.text).call("", promise=True)
-                print(555555555, _cf_chl_ctx)
-                print(555555555, a)
+                _cf_chl_ctx= JSDomRuntime("window._cf_chl_ctx = ':((';"+ """window.XMLHttpRequest.prototype.send = function (...body) {
+window._cf_chl_ctx = body;
+console.log("hello");
+};"""+
+                    f"window._cf_chl_opt = {json.dumps(self.content["_cf_chl_opt"])};" + base_challenge.text,
+                    url=cf_util.get_base_url(self.response.url),
+                    referer=cf_util.get_base_url(self.response.url),
+                    html=self.response.text
+                )
+                print(666666666, _cf_chl_ctx.eval(""))
+                time.sleep(30)
+                print(555555555, _cf_chl_ctx.eval("window._cf_chl_ctx"))
                 _cf_chl_ctx = CfRequestBody({
                     "gjJw8": self.content["_cf_chl_opt"]["cType"],
                     "cjLL8": self.content["_cf_chl_opt"]["cNounce"],

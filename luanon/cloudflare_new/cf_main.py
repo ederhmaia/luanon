@@ -22,18 +22,26 @@ class CloudflareScraper(requests.Session):
 
     @override
     def request(self, method, url, **kwargs) -> requests.Response:
+        if "timeout" not in kwargs:
+            kwargs.update({"timeout": 30})
         base_response = super().request(method=method, url=url, **kwargs)
         if not cf_util.check_cloudflare_enabled(base_response):
             return base_response
-        for retry in range(self.cf_max_retries):
+        for retry in range(1, self.cf_max_retries + 1):
+            if self.cf_debug:
+                print("retry", retry)
             try:
-                response = super().request(method=method, url=url, **kwargs)
-                solver = CfChallenge.render(self, super(), response)
+                if not base_response:
+                    base_response = super().request(method=method, url=url, **kwargs)
+                solver = CfChallenge.render(self, super(), base_response)
                 solver.solve_challenge()
                 if solver.is_solved:
                     # Success
                     return solver.response
             except Exception:
+                if retry + 1 != self.cf_max_retries:
+                    # Last try
+                    base_response = None
                 if self.cf_debug:
                     traceback.print_exc()
         # Fail

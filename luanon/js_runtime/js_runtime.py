@@ -6,6 +6,7 @@
 
 import os
 import shutil
+import hashlib
 import threading
 import subprocess
 
@@ -55,10 +56,7 @@ class JSRuntime:
         shutil.rmtree(os.path.join(self._current_path, "__memory__"))
 
     def call(self, name: str, args: list = (), max_wait: int = 30, promise: bool = False) -> tuple[str, str]:
-        tag = str(id(self))
-        filename = os.path.join(self._current_path, "__memory__", f"{tag}.txt")
         data = [
-            f"--tag={tag}",
             f"--scriptStr={self.script}",
             f"--url={self.url}",
             f"--referer={self.referer}",
@@ -68,8 +66,14 @@ class JSRuntime:
             f"--promise={str(promise).lower()}",
             f"--maxWait={max_wait * 1000}"
         ]
+
+        tag = hashlib.md5(str(data).encode()).hexdigest()
+        filename = os.path.join(self._current_path, "__memory__", f"{tag}.txt")
+
+        data.insert(0, f"--tag={tag}")
         data = [d.replace("\n", " ") for d in data]
         self._write_data_to_file("\n".join(data), filename)
+
         cmd = [
             "node",
             os.path.join(self._current_path, self._base_js_file),
