@@ -1,9 +1,7 @@
-# from luanon.cloudflare_new.cf_body.cf_request_body import CfRequestBody
-# print(CfRequestBody("SLMOzOPOmOCOwOW8$8OK8O-is$rFQzAY9OHiOYCMYyOXMHaYQOswZOzcYPYMaJHJDMYM4zQYE4Y2i5Hhe$5pY5NCYZOskYROKiCYrGkYTYpMrhQOsW92kYrsYBOQZr1PQkLUY3GqZrSYTD1hu5YYeOH2-K1yYsNtJXuCxYYa6G81YsEMwYrqbzoJJrGatnOMs6wrQH8Y5943xKmUYrDRImMYXT8TSOHHlzYYicnOunmns$nMv6mBYzE4l-oBIoRCBkPLYRu$CaXUSfHc5hNLGSoNlXYLI28-InuWIQYuoceeIZwmsYAE5OO7dLcSTxC$zDWiiW-LHY-Tn7PZYIG5RriCIQ3hL9X4pYYfOY+5+L5YHY+cMMYq181YtRkL9MsYYUJ5kqTn5-4RdMOdM7sKUvnDKmlkEmp8SS4VY15GGMOruo9uo9mouAY4pouno9bQOpeTCZTOem$5+tYYQyjts9TCcLHYYbuonrOcePDYY9i1HR7RuwiIKISokx4-MMR$zowGLr-LpkT6nHqGteOlB12iO4qo9BmAoOlouXUf8znCZaxrzU-RcXzTUAEWLFOwiPxCYYciYF51wy+JoYsCCMNQA9kmzAZnmQHBiSGOwH3ko3JRfuQMjz9MUuFkZihk3hi9fiA4CBOsJrwCa4MQA48ojRANsmnAStGyuUuN4oQ5PRmUeEv9O4p531zezOoY2fLR1bzOJY3ssGrCmM4O4sFNzRdMMOS6t615YLhrH6MvacYLzGs6444FOCk4g5k1rC9sHHnRMzGIHMvYTS5Im9ziC8TM$Cumsi61C1Y9M8sso18sFunm$opM8HszeLsF6ry58bYuzOMokuC618S4unQYnf48$tZkLsiCNV1ZoYMzHf4TYiM4MM8SmE58QHnRZB1EKLUYTKL6Y8rZ2TWzi44qTUQTHfTpM3S56HAS2NoAzOYOLkJUrrXYN4pRY1rrT8lYRM4irQYkp5EKiCaEHMHtkAL9Op5i6H$6D91iks1zDWZWZHzYNYF9sAoJHMo1HsiQrQYihzesFQMR5kNovrY5GLpA1Y3YORrmHAFmsHyknOz8wZ2hoW-t$4MUSsF$HLYMKIXWJQr4S56mnzioP3RM-Y-RrPmBRrHw8zLvzdZRBGa-3B1WYmKr8TU-Gcz8v43T8NHJ5CKrM2OnOtzt1rq6Oq1ifm3O8S$SmU-BUsN94UzsT4k4LBiSuBYCCQC58$rCmAHHvRMeP4aYQ5JH8i1MrppwbsON4RKYpMMYCsruYM9m9sMqw8O-Q-$pOA4FvZJA$XCQzR281rmsMWM35knOR5in+LrNgHE$t-Y3ztxrRKiIOTsZlrMRMgfrXoI9rYCUrOYkt1MsZV41KmknCAMNok1YYOFYrt1uziwuCY-M42lOwNI1C9OTHMVecYC1YLv5knKl8IsHHyROtzO-$2u84m$KLyaA4CoY8YOr1ifig63$trJOzk3HkG8PmszYfYHXLMm$58lr2zmhY1YLonisFMmUM8eOSRYxrMpcBOLd4yqUsMHMY-LUYM+uaFCtHOzLBO$BZuHQRLoOsrrsmHyYMfOLrKk5sFX4KYBr4YmsrIlf1jOlr4J-6lKrTn5zCKMRrMYdzCKZYM$rKYPe-RPGZTlMrmYLR$28SYpMczeH$M4rl4Y", "YrHzsKRXMT5-$Sp64noeUBQIiEtPJWqVO1mGkfAhZ9uNcv2d8wa+CjF7LDyx3blg0").decode())
 from luanon.cloudflare_new.cf_main import CloudflareScraper
 
 if __name__ == "__main__":
-    cf = CloudflareScraper(cf_max_retries=1, cf_debug=True)
-    resp = cf.get("https://nowsecure.nl/")
+    cf = CloudflareScraper(cf_max_retries=3, cf_debug=True)
+    resp = cf.get("https://nowsecure.nl/", proxies={"http": "http://localhost:8000", "https": "http://localhost:8000"}, verify=False)
     print(f"Status code: {resp.status_code}")
     print(f"Source: {resp.text}")

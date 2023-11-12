@@ -80,7 +80,8 @@ class JSRuntime:
             f"--filename={filename}"
         ]
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        timer = threading.Timer(max_wait, proc.kill)
+        # Có thể delay vài giây?
+        timer = threading.Timer(max_wait + 3, proc.kill)
         timer.start()
         try:
             stdout, stderr = proc.communicate()

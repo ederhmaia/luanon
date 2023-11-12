@@ -29,20 +29,20 @@ class CloudflareScraper(requests.Session):
             return base_response
         for retry in range(1, self.cf_max_retries + 1):
             if self.cf_debug:
-                print("retry", retry)
+                print("Đang thử bypass lần", retry)
             try:
-                if not base_response:
+                if not isinstance(base_response, requests.Response):
                     base_response = super().request(method=method, url=url, **kwargs)
                 solver = CfChallenge.render(self, super(), base_response)
                 solver.solve_challenge()
                 if solver.is_solved:
-                    # Success
+                    # Thành công
                     return solver.response
             except Exception:
-                if retry + 1 != self.cf_max_retries:
-                    # Last try
-                    base_response = None
                 if self.cf_debug:
                     traceback.print_exc()
-        # Fail
+                if retry != self.cf_max_retries:
+                    # Lần lặp cuối giữ lại để return
+                    base_response = None
+        # Thất bại
         return base_response

@@ -18,41 +18,38 @@ from luanon.cloudflare_new.jsdom_runtime import JSDomRuntime
 class CfChallenge:
     cloudflare_scraper: "CloudflareScraper"
     session: requests.Session
-    content: dict
     response: requests.Response | None
 
     @classmethod
     def render(cls, cloudflare_scraper: "CloudflareScraper", session: requests.Session, response: requests.Response) -> "CfChallenge":
-        content = cf_util.parse_content(response)
-        return cls(cloudflare_scraper, session, content, response)
+        return cls(cloudflare_scraper, session, response)
 
     @property
     def is_solved(self) -> bool:
         return cf_util.check_cloudflare_enabled(self.response)
 
     def solve_challenge(self) -> None:
-        if self.cloudflare_scraper.cf_debug:
-            print("Solving...")
-            print(self.content["_cf_chl_opt"])
-
+        # Khởi tạo
+        jsdom = JSDomRuntime(
+            "",
+            url=cf_util.get_base_url(self.response.url),
+            referer=cf_util.get_base_url(self.response.url),
+            html=self.response.text
+        )
+        print(jsdom.eval("window._cf_chl_opt")[0])
+        print(jsdom.eval("window._cf_chl_opt")[0])
+        exit()
         base_challenge = self.session.get(self.content["cpo"])
-        open("a.js", "w").write(base_challenge.text)
+        # open("a.js", "w").write(base_challenge.text)
         match self.content["_cf_chl_opt"]["cType"]:
             case "managed":
                 data = cf_util.parse_data(base_challenge, self.content["_cf_chl_opt"])
                 print(self.response.text)
-                _cf_chl_ctx= JSDomRuntime("window._cf_chl_ctx = ':((';"+ """window.XMLHttpRequest.prototype.send = function (...body) {
-window._cf_chl_ctx = body;
-console.log("hello");
-};"""+
-                    f"window._cf_chl_opt = {json.dumps(self.content["_cf_chl_opt"])};" + base_challenge.text,
-                    url=cf_util.get_base_url(self.response.url),
-                    referer=cf_util.get_base_url(self.response.url),
-                    html=self.response.text
-                )
-                print(666666666, _cf_chl_ctx.eval(""))
+                _cf_chl_ctx = 5
+                print(666666666, *_cf_chl_ctx, sep="\n\n\n")
+                exit()
                 time.sleep(30)
-                print(555555555, _cf_chl_ctx.eval("window._cf_chl_ctx"))
+                print(555555555, *_cf_chl_ctx.eval("window._cf_chl_opt"), sep="\n\n\n")
                 _cf_chl_ctx = CfRequestBody({
                     "gjJw8": self.content["_cf_chl_opt"]["cType"],
                     "cjLL8": self.content["_cf_chl_opt"]["cNounce"],
