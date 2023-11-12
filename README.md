@@ -4,6 +4,8 @@ $${An \space intellectual \space product \space of \space \color{lightyellow}Lua
 
 <p align="center">
   <kbd><img width="300" height="300" src="./assets/doi.gif"></kbd>
+  <br>
+  <strong>❤️🩷💛ツ💚💙🩵</strong>
 </p>
 
 ---
