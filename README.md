@@ -2,6 +2,10 @@ $${\textbf{Luanon} \space \textbf{Python} \space \textbf{Library}}$$
 
 $${An \space intellectual \space product \space of \space \color{lightyellow}Lua \space \color{lightgreen}Non \space \color{lightblue}Team}$$
 
+<p align="center">
+  ![uwu](./assets/doi.gif)
+</p>
+
 ---
 
 # Dear Cloudflare Team
