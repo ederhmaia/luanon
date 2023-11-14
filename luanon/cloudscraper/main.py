@@ -1,4 +1,4 @@
-from luanon.cloudflare_new.cf_main import CloudflareScraper
+from luanon.cloudscraper.cf_main import CloudflareScraper
 
 if __name__ == "__main__":
     cf = CloudflareScraper(cf_max_retries=3, cf_debug=True)

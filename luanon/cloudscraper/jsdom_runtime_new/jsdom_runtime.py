@@ -15,9 +15,9 @@ from dataclasses import dataclass
 
 
 @dataclass
-class JSRuntime:
+class JSDomRuntime:
     _node: subprocess.Popen = subprocess.Popen(
-        ["node", "js_runtime.js"],
+        ["node", "jsdom_runtime.js"],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,

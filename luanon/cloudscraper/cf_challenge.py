@@ -9,9 +9,9 @@ import time
 import requests
 
 from dataclasses import dataclass
-from luanon.cloudflare_new import cf_util
-from luanon.cloudflare_new.cf_body import CfRequestBody, CfResponseBody
-from luanon.cloudflare_new.jsdom_runtime import JSDomRuntime
+from luanon.cloudscraper import cf_util
+from luanon.cloudscraper.cf_body import CfRequestBody, CfResponseBody
+from luanon.cloudscraper.jsdom_runtime import JSDomRuntime
 
 
 @dataclass

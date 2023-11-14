@@ -11,8 +11,8 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 
-from luanon.cloudflare_new import cf_exception
-from luanon.cloudflare_new.jsdom_runtime import JSDomRuntime
+from luanon.cloudscraper import cf_exception
+from luanon.cloudscraper.jsdom_runtime import JSDomRuntime
 
 
 def get_base_url(url: str) -> str:
@@ -35,6 +35,7 @@ def check_cloudflare_enabled(response: requests.Response) -> bool:
     return False
 
 
+# Will remove in version 1.0.1
 def parse_content(response: requests.Response) -> dict:
     result = {}
     soup = BeautifulSoup(response.content, features="html.parser")
