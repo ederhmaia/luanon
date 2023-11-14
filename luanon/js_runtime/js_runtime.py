@@ -4,42 +4,41 @@
     ©2023 LuaNonTeam
 """
 
+import io
+import os
 import json
+import queue
+import signal
+import threading
 import subprocess
 from dataclasses import dataclass
 
 
 @dataclass
 class JSRuntime:
-    node: subprocess.Popen | None = None
-
-    def __del__(self) -> None:
-        self.close()
-
-    def open(self) -> "JSRuntime":
-        if not isinstance(self.node, subprocess.Popen):
-            self.node = subprocess.Popen(
-                ["node", "js_runtime.js"],
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                encoding="UTF-8",
-                text=True
-            )
-        return self
+    _node: subprocess.Popen = subprocess.Popen(
+        ["node", "js_runtime.js"],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        encoding="UTF-8",
+        text=True
+    )
+    _lock_event = threading.Lock()
+    _stop_event = threading.Event()
+    _queue: queue.Queue = queue.Queue()
 
     def close(self) -> None:
-        if self.node:
-            self.node.stdout.close()
-            self.node.stderr.close()
-            if self.node.poll() is None:
-                self.node.terminate()
-            self.node.wait()
-            self.node = None
+        if self._node and self._node.poll() is None:
+            os.kill(self._node.pid, signal.SIGINT)
+            self._node.wait()
+        if self._lock_event.locked():
+            self._lock_event.release()
+        self._stop_event.set()
+        self._queue.put(None)
 
     @staticmethod
     def _create_function_call(function_name: str, *args: str | int | bool) -> str:
-        # Nothing
         if not function_name.strip():
             return ""
 
@@ -47,44 +46,37 @@ class JSRuntime:
 
         for arg in args:
             match arg:
-                case str():
-                    js_args.append(f"`{arg}`")
-                # print(isinstance(True, int))
-                # True
-                # Nên chổ này match cái bool trước để tránh nhầm bool thành int
                 case bool():
                     js_args.append(str(arg).lower())
                 case int():
                     js_args.append(str(arg))
                 case _:
                     js_args.append(f"`{arg}`")
-        return f"global.{function_name}({", ".join(js_args)})"
 
-    def exec(self, command: str, timeout: int = 0) -> tuple[str | int | bool, str]:
-        command = json.dumps({"command": command, "timeout": timeout})
-        self.node.stdin.write(command + "\n")
-        self.node.stdin.flush()
-        return tuple(json.loads(self.node.stdout.readline().strip()).values())
+        return f"{function_name}({', '.join(js_args)})"
+
+    def get_result(self, stream: io.TextIOWrapper) -> None:
+        while not self._stop_event.is_set():
+            try:
+                r = stream.readline().strip()
+                print(r)
+                self._queue.put(tuple(json.loads(r).values()))
+            except json.decoder.JSONDecodeError as error:
+                self._queue.put(("", repr(error)))
 
     def eval(self, command: str, timeout: int = 30) -> tuple[str | int | bool, str]:
-        return self.exec(command, timeout)
+        with self._lock_event:
+            self._node.stdin.write(json.dumps({"command": command.replace("\n", " "), "timeout": timeout}) + "\n")
+            self._node.stdin.flush()
+
+            threading.Thread(target=self.get_result, args=(self._node.stdout,), daemon=True).start()
+
+            try:
+                result = self._queue.get(timeout=timeout)
+            except queue.Empty:
+                result = "", "Hết thời gian chạy lệnh"
+            self._stop_event.set()
+            return result
 
     def call(self, function_name: str, *args: str | int | bool, timeout: int = 30) -> tuple[str | int | bool, str]:
-        return self.exec(self._create_function_call(function_name, *args), timeout)
-
-
-"""Ví dụ
-
-j = JSRuntime()
-j.open()
-j.exec("global.hello = function (name) { return `hello, ${name}` }")
-
-print(j.eval("global.hello(`gnu`)"))
-> ('hello, gnu', '')
-
-print(j.call("hello", "gnu"))
-> ('hello, gnu', '')
-
-j.close()
-
-"""
+        return self.eval(self._create_function_call(function_name, *args), timeout)
