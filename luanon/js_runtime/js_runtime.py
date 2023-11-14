@@ -58,9 +58,7 @@ class JSRuntime:
     def get_result(self, stream: io.TextIOWrapper) -> None:
         while not self._stop_event.is_set():
             try:
-                r = stream.readline().strip()
-                print(r)
-                self._queue.put(tuple(json.loads(r).values()))
+                self._queue.put(tuple(json.loads(stream.readline().strip()).values()))
             except json.decoder.JSONDecodeError as error:
                 self._queue.put(("", repr(error)))
 
