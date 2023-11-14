@@ -10,7 +10,7 @@ vm.createContext(context);
 process.stdin.on("data", (data) => {
     try {
         const input = JSON.parse(data.toString().trim());
-        process.stdout.write(JSON.stringify({ result: vm.runInContext(input.command, context) || "", error: "" }) + "\n");
+        process.stdout.write(JSON.stringify({ result: vm.runInContext(atob(input.command), context) || "", error: "" }) + "\n");
     } catch (error) {
         process.stdout.write(JSON.stringify({ result: "", error: `${error.name}: ${error.message}` }) + "\n");
     }

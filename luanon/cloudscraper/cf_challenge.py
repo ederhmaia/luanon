@@ -30,14 +30,15 @@ class CfChallenge:
 
     def solve_challenge(self) -> None:
         # Khởi tạo
-        jsdom = JSDomRuntime(
-            "",
-            url=cf_util.get_base_url(self.response.url),
-            referer=cf_util.get_base_url(self.response.url),
-            html=self.response.text
+        jsdom = JSDomRuntime()
+        jsdom.call(
+            "init",
+            cf_util.get_base_url(self.response.url),
+            cf_util.get_base_url(self.response.url),
+            self.response.text,
+            "Mozilla/5.0"
         )
-        print(jsdom.eval("window._cf_chl_opt")[0])
-        print(jsdom.eval("window._cf_chl_opt")[0])
+        print(jsdom.eval("dom"))
         exit()
         base_challenge = self.session.get(self.content["cpo"])
         # open("a.js", "w").write(base_challenge.text)

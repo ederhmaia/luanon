@@ -4,13 +4,14 @@
     ©2023 LuaNonTeam
 """
 
-import io
 import os
 import json
 import queue
+import base64
 import signal
 import threading
 import subprocess
+
 from dataclasses import dataclass
 
 
@@ -57,7 +58,7 @@ class JSRuntime:
 
     def eval(self, command: str, timeout: int = 30) -> tuple[str | int | bool, str]:
         with self._lock_event:
-            self._node.stdin.write(json.dumps({"command": command.replace("\n", " "), "timeout": timeout}) + "\n")
+            self._node.stdin.write(json.dumps({"command": base64.b64encode(command.encode()).decode(), "timeout": timeout}) + "\n")
             self._node.stdin.flush()
 
             def get_result() -> None:
