@@ -36,7 +36,7 @@ class CfRequestBody(CfBaseBody):
         return self.value
 
 
-""" Sài seo?
+""" Ví dụ
 
 value = "test"
 secret_key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="

@@ -3,7 +3,7 @@ $${\textbf{Luanon} \space \textbf{Python} \space \textbf{Library}}$$
 $${An \space intellectual \space product \space of \space \color{lightyellow}Lua \space \color{lightgreen}Non \space \color{lightblue}Team}$$
 
 <p align="center">
-  <kbd><img width="300" height="300" src="./assets/doi.gif"></kbd>
+  <kbd><img width="300" height="300" alt="đói.gif" src="./assets/đói.gif"></kbd>
   <br>
   <strong>❤️🩷💛ツ💚💙🩵</strong>
 </p>
@@ -20,7 +20,7 @@ $${An \space intellectual \space product \space of \space \color{lightyellow}Lua
 
 # Note
 
-- Current version: 0.0.0
+- Current version: 1.0.0
 - Why must use python 3.12?
 
     ![uwu](./assets/why_must_use_python_3.12.png)
@@ -30,15 +30,13 @@ $${An \space intellectual \space product \space of \space \color{lightyellow}Lua
 
 # Project Tree
 
-| Module           | Python  | Status      | Author(s)           | Description                                               |
-|------------------|---------|-------------|---------------------|-----------------------------------------------------------|
-| cloudscraper_new | >= 3.12 | Working     | @luanon404          | Will rename to cloudscraper in release 1.0.0.             |
-| cloudscraper     | >= 3.12 | Maintenance | @luanon404, @To_Duy | Will remove in release 1.0.0.                             |
-| hcaptcha         | >= 3.12 | Maintenance | @luanon404          | Bypass hCaptcha by using the requests library.            |
-| image            | >= 3.12 | Maintenance | @luanon404          | Image processor for an auto AI sub-library (future-task). |
-| js_runtime_new   | >= 3.12 | Working     | @luanon404          | Will rename to js_runtime in release 1.0.0.               |
-| js_runtime       | >= 3.12 | Done        | @luanon404          | Will remove in release 1.0.0.                             |
-| webdriver        | ?       | Maintenance | @luanon404          | Android WebDriver client                                  |
+| Module       | Python  | Status      | Author(s)  | Description                                               |
+|--------------|---------|-------------|------------|-----------------------------------------------------------|
+| cloudscraper | >= 3.12 | Working     | @luanon404 | Bypass cloudflare by using the requests library.          |
+| hcaptcha     | >= 3.12 | Maintenance | @luanon404 | Bypass hcaptcha by using the requests library.            |
+| image        | >= 3.12 | Maintenance | @luanon404 | Image processor for an auto AI sub-library (future-task). |
+| js_runtime   | >= 3.12 | Done        | @luanon404 | Run Javascript in Python syntax.                          |
+| webdriver    | ?       | Maintenance | @luanon404 | Android WebDriver client                                  |
 
 ---
 

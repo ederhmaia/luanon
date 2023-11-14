@@ -47,7 +47,7 @@ class CfResponseBody(CfBaseBody):
         return self.value
 
 
-""" Sài seo?
+""" Ví dụ
 
 value = "test"
 c_ray = "821cb54619bf1089"
