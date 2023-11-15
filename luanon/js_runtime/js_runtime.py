@@ -12,22 +12,23 @@ import signal
 import threading
 import subprocess
 
-from dataclasses import dataclass
 
-
-@dataclass
 class JSRuntime:
-    _node: subprocess.Popen = subprocess.Popen(
-        ["node", "js_runtime.js"],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        encoding="UTF-8",
-        text=True
-    )
-    _lock_event = threading.Lock()
-    _stop_event = threading.Event()
-    _queue: queue.Queue = queue.Queue()
+
+    def __init__(self, filename: str = "") -> None:
+        # Replace để đảm bảo cái này không bị lỗi prefix \ và /
+        filename = os.path.abspath(filename or __file__.replace("js_runtime.py", "js_runtime.js"))
+        self._node: subprocess.Popen = subprocess.Popen(
+            ["node", filename],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            encoding="UTF-8",
+            text=True
+        )
+        self._lock_event = threading.Lock()
+        self._stop_event = threading.Event()
+        self._queue: queue.Queue = queue.Queue()
 
     def close(self) -> None:
         if self._node and self._node.poll() is None:
@@ -66,7 +67,7 @@ class JSRuntime:
                     try:
                         self._queue.put(tuple(json.loads(self._node.stdout.readline().strip()).values()))
                     except json.decoder.JSONDecodeError as error:
-                        self._queue.put(("", repr(error)))
+                        self._queue.put(("", f"PyError: {repr(error)}"))
 
             threading.Thread(target=get_result, daemon=True).start()
 
