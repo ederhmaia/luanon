@@ -65,7 +65,11 @@ class JSRuntime:
             def get_result() -> None:
                 while not self._stop_event.is_set():
                     try:
-                        self._queue.put(tuple(json.loads(self._node.stdout.readline().strip()).values()))
+                        output = self._node.stdout.readline().strip()
+                        if output:
+                            self._queue.put(tuple(json.loads(output).values()))
+                        else:
+                            self._queue.put(("", "PyError: Kết quả trả về là rỗng."))
                     except json.decoder.JSONDecodeError as error:
                         self._queue.put(("", f"PyError: {repr(error)}"))
 
