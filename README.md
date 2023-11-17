@@ -5,7 +5,7 @@ $${An \space intellectual \space product \space of \space \color{lightyellow}Lua
 <p align="center">
   <kbd><img width="300" height="300" alt="đói.gif" src="./assets/đói.gif"></kbd>
   <br>
-  <strong>❤️🩷💛ツ💚💙🩵</strong>
+  <strong>💜🩷💛ツ💚💙🩵</strong>
 </p>
 
 ---
@@ -20,6 +20,7 @@ $${An \space intellectual \space product \space of \space \color{lightyellow}Lua
 
 # Note
 
+- Telegram group: [LuaNonCommunity](https://t.me/LuaNonCommunity)
 - Current version: 1.0.0
 - Why must use python 3.12?
 
