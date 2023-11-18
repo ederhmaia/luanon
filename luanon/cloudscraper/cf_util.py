@@ -3,16 +3,14 @@
     Ngày tạo: 11/06/2023
     ©2023 LuaNonTeam
 """
-
+import base64
 import re
-import json5
 import requests
 
-from bs4 import BeautifulSoup
+from typing import Callable
 from urllib.parse import urlparse
 
 from luanon.cloudscraper import cf_exception
-from luanon.cloudscraper.jsdom_runtime import JSDomRuntime
 
 
 def get_base_url(url: str) -> str:
@@ -35,32 +33,12 @@ def check_cloudflare_enabled(response: requests.Response) -> bool:
     return False
 
 
-# Will remove in version 1.0.1
-def parse_content(response: requests.Response) -> dict:
-    result = {}
-    soup = BeautifulSoup(response.content, features="html.parser")
-    script = soup.find("script").text
-
-    # window._cf_chl_opt = { ... };
-    _cf_chl_opt = re.search(r"window\._cf_chl_opt\s*=\s*({.+?});", script)
-    if not isinstance(_cf_chl_opt, re.Match):
-        return result
-    # json5 cant handle both ' and "
-    # Also json5 cant handle `cT: Math.floor(Date.now() / 1000)`
-    _cf_chl_opt, _ = JSDomRuntime().eval(_cf_chl_opt.group(1))
-    result["_cf_chl_opt"] = json5.loads(_cf_chl_opt)
-
-    quote = r"('|\")"
-    # cpo.src = '/cdn-cgi/challenge-platform/h/b/orchestrate/chl_page/v1?ray=...';
-    cpo = re.search(rf"cpo\.src\s*=\s*{quote}(.+?){quote};", script)
-    if not isinstance(cpo, re.Match):
-        return result
-    # Group 1 -> ' | "
-    # Group 2 -> /cdn-cgi/challenge-platform/h/b/orchestrate/chl_page/v1?ray=...
-    # Group 3 -> ' | "
-    result["cpo"] = urljoin(get_base_url(response.url), cpo.group(2))
-
-    return result
+def find_value_in_requests_list(name: str, requests_list: list, condition: Callable) -> any:
+    for request in requests_list:
+        value = request.get(name)
+        if value is not None and condition(value):
+            return value
+    return None
 
 
 def parse_data(response: requests.Response, _cf_chl_opt: dict) -> dict:
@@ -85,18 +63,26 @@ def parse_data(response: requests.Response, _cf_chl_opt: dict) -> dict:
         return result
     result["secret_key"] = secret_key
 
-    value_generator = iter(value for value in data if re.match(r"^/\d{9,10}:\d{10}:[a-zA-Z0-9_-]{43}/$", value))
-    server_params = next(value_generator, None)
-    if not isinstance(server_params, str):
-        return result
-
-    server_post_url = get_base_url(response.url)
-    server_post_url = urljoin(server_post_url, "/cdn-cgi/challenge-platform/")
-    server_post_url = urljoin(server_post_url, f"/h/{_cf_chl_opt["cFPWv"]}/")
-    server_post_url = urljoin(server_post_url, "/flow/ov1/")
-    server_post_url = urljoin(server_post_url, server_params)
-    server_post_url = urljoin(server_post_url, f"/{_cf_chl_opt["cRay"]}/")
-    server_post_url = urljoin(server_post_url, f"/{_cf_chl_opt["cHash"]}/")
-    result["server_post_url"] = server_post_url
+    # value_generator = iter(value for value in data if re.match(r"^/\d{9,10}:\d{10}:[a-zA-Z0-9_-]{43}/$", value))
+    # server_params = next(value_generator, None)
+    # if not isinstance(server_params, str):
+    #     return result
+    #
+    # server_post_url = get_base_url(response.url)
+    # server_post_url = urljoin(server_post_url, "/cdn-cgi/challenge-platform/")
+    # server_post_url = urljoin(server_post_url, f"/h/{_cf_chl_opt["cFPWv"]}/")
+    # server_post_url = urljoin(server_post_url, "/flow/ov1/")
+    # server_post_url = urljoin(server_post_url, server_params)
+    # server_post_url = urljoin(server_post_url, f"/{_cf_chl_opt["cRay"]}/")
+    # server_post_url = urljoin(server_post_url, f"/{_cf_chl_opt["cHash"]}/")
+    # result["server_post_url"] = server_post_url
 
     return result
+
+
+def clean_script(script: str, challenge: str) -> str:
+    match challenge:
+        case "base":
+            # (/\r\n/g,'\n') -> (/\\r\\n/g,'\\n')
+            script = script.replace(base64.b64decode(b"KC9cclxuL2csJ1xuJyk=").decode(), base64.b64decode(b"KC9cXHJcXG4vZywnXFxuJyk=").decode())
+    return script

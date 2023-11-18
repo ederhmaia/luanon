@@ -4,21 +4,12 @@
     ©2023 LuaNonTeam
 """
 
-import subprocess
-
-from dataclasses import dataclass
+import os
 
 from luanon.js_runtime import JSRuntime
 
 
-@dataclass
 class JSDomRuntime(JSRuntime):
-    _node: subprocess.Popen = subprocess.Popen(
-        ["node", "jsdom_runtime.js"],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        encoding="UTF-8",
-        text=True
-    )
 
+    def __init__(self, filename: str) -> None:
+        super().__init__(os.path.abspath(filename))

@@ -9,6 +9,7 @@ import time
 import requests
 
 from dataclasses import dataclass
+
 from luanon.cloudscraper import cf_util
 from luanon.cloudscraper.cf_body import CfRequestBody, CfResponseBody
 from luanon.cloudscraper.jsdom_runtime import JSDomRuntime
@@ -30,35 +31,89 @@ class CfChallenge:
 
     def solve_challenge(self) -> None:
         # Khởi tạo
-        jsdom = JSDomRuntime()
-        jsdom.call(
-            "init",
-            cf_util.get_base_url(self.response.url),
-            cf_util.get_base_url(self.response.url),
-            self.response.text,
-            "Mozilla/5.0"
+        jsdom_runtime = JSDomRuntime("jsdom_runtime/jsdom_runtime.js")
+        print(jsdom_runtime.eval("""
+            const requests_list = [];
+            
+            var abc = "hi";
+            class CustomResourceLoader extends jsdom.ResourceLoader {
+                fetch(url, options) {
+                    requests_list.push({ url, options });
+                    return super.fetch(url, options);
+                }
+            }
+            
+            const loader = new CustomResourceLoader({ userAgent: `""" + "Mozilla/5.0" + """` });
+            
+            const dom = new jsdom.JSDOM(
+                `""" + self.response.text + """`,
+                {
+                    url: `""" + cf_util.get_base_url(self.response.url) + """`,
+                    referer: `""" + cf_util.get_base_url(self.response.url) + """`,
+                    contentType: "text/html",
+                    includeNodeLocations: true,
+                    runScripts: "dangerously",
+                    pretendToBeVisual: true,
+                    resources: loader,
+                    allowSpecialUseDomain: true,
+                    rejectPublicSuffixes: false,
+                    beforeParse: function (window) {
+                        
+                        let win = window.XMLHttpRequest;
+                        win.prototype.open = function(method, url) {
+                            this._url = url;
+                            requests_list.push({ url: this._url });
+                        };
+                        win.prototype.send = function(body) {
+                            requests_list.push({ url: this._url, body });
+                        };
+                        window.XMLHttpRequest = win;
+                        window.sendRequest = function (url) {
+                            abc = url;
+                        };
+                    }
+                }
+            );
+            dom.window.sendRequest = function (url) {
+                abc = url;
+            };
+            const ctx = dom.getInternalVMContext();
+            
+            ctx.window.sendRequest = function (url) {
+                abc = url;
+            };
+            ctx.window.XMLHttpRequest.prototype.open = function(method, url) {
+                            this._url = url;
+                            requests_list.push({ url: this._url });
+                        };
+                        ctx.window.XMLHttpRequest.prototype.send = function(body) {
+                            requests_list.push({ url: this._url, body });
+                        };
+        """))
+        _cf_chl_opt, _ = jsdom_runtime.eval("ctx.window._cf_chl_opt")
+        script_url = cf_util.find_value_in_requests_list(
+            "url",
+            jsdom_runtime.eval("requests_list")[0],
+            lambda x: "/cdn-cgi/challenge-platform/" in x
         )
-        print(jsdom.eval("dom"))
-        exit()
-        base_challenge = self.session.get(self.content["cpo"])
-        # open("a.js", "w").write(base_challenge.text)
-        match self.content["_cf_chl_opt"]["cType"]:
+        base_challenge = self.session.get(script_url)
+        print(jsdom_runtime.eval("vm.runInContext(`" + cf_util.clean_script(base_challenge.text, "base") + "`, ctx)"))
+        time.sleep(10)
+        print(11111, jsdom_runtime.eval("abc"))
+        print(json.dumps(jsdom_runtime.eval("requests_list")[0], indent=4))
+        exit(0)
+        match _cf_chl_opt["cType"]:
             case "managed":
-                data = cf_util.parse_data(base_challenge, self.content["_cf_chl_opt"])
-                print(self.response.text)
-                _cf_chl_ctx = 5
-                print(666666666, *_cf_chl_ctx, sep="\n\n\n")
-                exit()
-                time.sleep(30)
-                print(555555555, *_cf_chl_ctx.eval("window._cf_chl_opt"), sep="\n\n\n")
+                data = cf_util.parse_data(base_challenge, _cf_chl_opt)
+                print(data)
                 _cf_chl_ctx = CfRequestBody({
-                    "gjJw8": self.content["_cf_chl_opt"]["cType"],
-                    "cjLL8": self.content["_cf_chl_opt"]["cNounce"],
-                    "YMPhv8": self.content["_cf_chl_opt"]["cvId"],
+                    "gjJw8": _cf_chl_opt["cType"],
+                    "cjLL8": _cf_chl_opt["cNounce"],
+                    "YMPhv8": _cf_chl_opt["cvId"],
                     "JtXT7": 0,
                     "Ewdi8": 0,
                     "NeUtpl3": 1,
-                    "fAdNmY5": self.content["_cf_chl_opt"]["cRq"],
+                    "fAdNmY5": _cf_chl_opt["cRq"],
                     "vruOBE0": {
                         "FhXKw9": 0,
                         "gauD0": 7,
@@ -72,10 +127,10 @@ class CfChallenge:
                     "guqU9": False
                 }, secret_key=data["secret_key"])
 
-                body_encoded = f"v_{self.content["_cf_chl_opt"]["cRay"]}={_cf_chl_ctx.encode()}"
+                body_encoded = f"v_{_cf_chl_opt["cRay"]}={_cf_chl_ctx.encode()}"
                 headers = {
                     "Content-type": "application/x-www-form-urlencoded",
-                    "CF-Challenge": self.content["_cf_chl_opt"]["cHash"],
+                    "CF-Challenge": _cf_chl_opt["cHash"],
                     "Content-Length": str(len(body_encoded)),
                     "Origin": cf_util.get_base_url(base_challenge.url)[:-1],
                     "Referer": cf_util.get_base_url(base_challenge.url),
@@ -86,8 +141,8 @@ class CfChallenge:
 
                 luanon_challenge = self.session.post(data["server_post_url"], data=body_encoded, headers=headers)
                 print(luanon_challenge.text)
-                luanon_challenge_body = CfResponseBody(luanon_challenge.text, c_ray=self.content["_cf_chl_opt"]["cRay"])
-                print(22222222, self.content["_cf_chl_opt"]["cRay"], luanon_challenge_body.decode())
+                luanon_challenge_body = CfResponseBody(luanon_challenge.text, c_ray=_cf_chl_opt["cRay"])
+                print(22222222, _cf_chl_opt["cRay"], luanon_challenge_body.decode())
             case _:
                 # Hmm
                 return None
