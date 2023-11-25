@@ -30,14 +30,14 @@ class CfLzString:
         result = ""
         if text:
             result = self._compress(text, 6, lambda char: self.secret_key[char])
-            end = len(result) % 4
-            if end > 0:
-                result += "=" * (4 - end)
         return result
 
     def base64_to_text(self, base64: str) -> str:
         result = ""
         if base64:
+            if "%2b" in base64:
+                # Cloudflare encode first + to %2b
+                base64 = base64.replace("%2b", "+", 1)
             result = self._decompress(base64, 32, lambda index: self.table_char[base64[index]])
         return result
 
@@ -338,7 +338,7 @@ class CfLzString:
                 num_bits += 1
 
             if char in dictionary:
-                entry = dictionary.get(char, "")
+                entry = dictionary.get(char)
             else:
                 if char == dict_size:
                     entry = w + w[0]

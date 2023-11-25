@@ -4,19 +4,19 @@
     ©2023 LuaNonTeam
 """
 
-from luanon.base_setup import base_setup
+from luanon.base import base_install, base_uninstall
 
-Setup = lambda: base_setup({
+packages = {
     "python": [
-        "json5==0.9.14",
         "requests==2.31.0",
-        "beautifulsoup4==4.12.2"
+        "brotli==1.1.0"
     ],
     "nodejs": [
-        "fs@0.0.1-security",
         "vm@0.1.0",
-        "minimist@1.2.8",
         # JSDOM
-        "https://github.com/luanon404/jsdom-cloudflare/tarball/main --omit=dev"
+        "https://github.com/luanon404/jsdom-cloudflare/tarball/build --omit=dev"
     ]
-})
+}
+
+Install = lambda: base_install(packages)
+Uninstall = lambda: base_uninstall(packages)

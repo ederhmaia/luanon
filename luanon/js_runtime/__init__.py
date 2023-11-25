@@ -4,10 +4,11 @@
     ©2023 LuaNonTeam
 """
 
-from .setup import Setup
+from .setup import Install, Uninstall
 from .js_runtime import JSRuntime
 
 __all__ = [
-    "Setup",
+    "Install",
+    "Uninstall",
     "JSRuntime"
 ]

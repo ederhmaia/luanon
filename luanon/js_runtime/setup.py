@@ -4,11 +4,14 @@
     ©2023 LuaNonTeam
 """
 
-from luanon.base_setup import base_setup
+from luanon.base import base_install, base_uninstall
 
-Setup = lambda: base_setup({
+packages = {
     "python": [],
     "nodejs": [
         "vm@0.1.0"
     ]
-})
+}
+
+Install = lambda: base_install(packages)
+Uninstall = lambda: base_uninstall(packages)

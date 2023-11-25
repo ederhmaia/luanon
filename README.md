@@ -10,34 +10,51 @@ $${An \space intellectual \space product \space of \space \color{lightyellow}Lua
 
 ---
 
-# Dear Cloudflare Team
+## Ghi chú
 
-- I know that you will visit this project in someday.
-- In fairness, you exist, just as we do.
-- You protect websites for money.
-- Likewise, I sell this bypass API for money.
-- Let's enjoy my project, there's no need for anger😊😊😊
+- Nhóm hỗ trợ Telegram: [LuaNonCommunity](https://t.me/LuaNonCommunity)
+- Phiên bản hiện tại: 1.0.0-dev (là chưa có gì hết😁)
 
-# Note
+  | Mã | Giải thích                                  |
+  |----|---------------------------------------------|
+  | DS | Không hoạt động, đang sửa lại               |
+  | TN | Không hoạt động, không có thời gian sửa lại |
+  | CO | Hoạt động bình thường                       |
 
-- Telegram group: [LuaNonCommunity](https://t.me/LuaNonCommunity)
-- Current version: 1.0.0
-- Why must use python 3.12?
+## Cây dự án
 
-    ![uwu](./assets/why_must_use_python_3.12.png)
+- Cái trạng thái xem ở 👆.
 
-- I don't want to use `f"Hello {''.join(['d', 'a', 'd'])}!"`.
-- I want to use `f"Hello {"".join(["d", "a", "d"])}!"`.
+  | Module                       | Python | Trạng thái | Description                                        |
+  |------------------------------|--------|------------|----------------------------------------------------|
+  | [cloudscraper](Cloudscraper) | ≥ 3.12 | DS         | Bypass cloudflare bằng thư viện requests và jsdom. |
+  | [hcaptcha](Hcaptcha)         | ≥ 3.12 | TN         | Bypass hcaptcha bằng thư viện requests.            |
+  | [image](Image)               | ≥ 3.12 | TN         | Bộ xử lý hình ảnh để train AI cho hcaptcha         |
+  | [js_runtime](JS_Runtime)     | ≥ 3.12 | CO         | Chạy Javascript trong Python.                      |
+  | [webdriver](WebDriver)       | ≥ 3.12 | TN         | Android WebDriver client                           |
 
-# Project Tree
+## Cloudscraper
 
-| Module       | Python  | Status      | Author(s)  | Description                                               |
-|--------------|---------|-------------|------------|-----------------------------------------------------------|
-| cloudscraper | >= 3.12 | Working     | @luanon404 | Bypass cloudflare by using the requests library.          |
-| hcaptcha     | >= 3.12 | Maintenance | @luanon404 | Bypass hcaptcha by using the requests library.            |
-| image        | >= 3.12 | Maintenance | @luanon404 | Image processor for an auto AI sub-library (future-task). |
-| js_runtime   | >= 3.12 | Done        | @luanon404 | Run Javascript in Python syntax.                          |
-| webdriver    | ?       | Maintenance | @luanon404 | Android WebDriver client                                  |
+- **Chủ:** `@luanon404`
+- **Cu li:** `@ToDuy`
+- Một số link tham khảo:
+  - [Giải thích mã lỗi](https://developers.cloudflare.com/turnstile/reference/client-side-errors/) 
+
+## Hcaptcha
+
+- Chả biết ghi gì nữa.
+
+## Image
+
+- Chả biết ghi gì nữa.
+
+## JS_Runtime
+
+- Chả biết ghi gì nữa.
+
+## WebDriver
+
+- Chả biết ghi gì nữa.
 
 ---
 

@@ -2,6 +2,9 @@
 //    Ngày tạo: 11/14/2023
 //    ©2023 LuaNonTeam
 
+//    Tắt cảnh báo TLS
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+
 module.paths.push(
     require("child_process").execSync("npm root -g").toString().trim()
 );
@@ -29,6 +32,7 @@ objectToJsonString = function(obj) {
     return JSON.stringify(result);
 };
 
+global_error = "";
 const context = {
     jsdom: require("jsdom-cloudflare"),
     objectToJsonString,
@@ -36,11 +40,24 @@ const context = {
 };
 vm.createContext(context);
 
+console = ((dict = {}) => new Proxy(console, {
+    get(console, key) {
+        if (typeof console[key] === "function") {
+            return dict[key] ?? (dict[key] = (...args) => {
+                global_error += args.join(" ") + "\n";
+                return null;
+            })
+        }
+        return console[key]
+    }
+}))()
+
 process.stdin.on("data", (input) => {
+    let result;
     try {
         input = input.toString().trim();
         let data = JSON.parse(atob(input));
-        let result = vm.runInContext(data.command, context);
+        result = vm.runInContext(data.command, context);
 
         switch (typeof result) {
             case "boolean":
@@ -58,21 +75,21 @@ process.stdin.on("data", (input) => {
 
         result = "-" + btoa(JSON.stringify({
             result: result,
-            error: null
+            error: null,
+            log: global_error || null
         })) + "-";
-        for (let i = 0; i < result.length; i++) {
-            process.stdout.write(result[i]);
-        }
-        process.stdout.write("\n");
     } catch (error) {
         result = "-" + btoa(JSON.stringify({
             result: null,
-            error: `NodeError: ${error.stack}`
+            error: `NodeError: ${error.stack}`,
+            log: global_error || null
         })) + "-";
+    } finally {
         for (let i = 0; i < result.length; i++) {
             process.stdout.write(result[i]);
         }
         process.stdout.write("\n");
+        global_error = "";
     }
 });
 

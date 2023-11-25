@@ -3,15 +3,14 @@
     Ngày tạo: 11/14/2023
     ©2023 LuaNonTeam
 """
-import base64
+
 import os
 import json
 import queue
-import re
+import base64
 import signal
 import string
 import threading
-import time
 import traceback
 import subprocess
 
@@ -68,7 +67,7 @@ class JSRuntime:
 
         return f"{function_name}({', '.join(js_args)})"
 
-    def eval(self, command: str, timeout: int = 30) -> tuple[any, any]:
+    def eval(self, command: str, timeout: int = 30) -> tuple[any, any, any]:
         with self._lock_event:
             # Encode command để khỏi xử lý \n hay ' hay " gì đó
             data = json.dumps({"command": command})
@@ -108,7 +107,6 @@ class JSRuntime:
                                 else:
                                     if _reading_flag and r == "-":
                                         break
-
                         output = base64.b64decode(_result.encode()).decode()
                         output = json.loads(output)
                         if output:
@@ -137,5 +135,5 @@ class JSRuntime:
             self._stop_event.clear()
             return result
 
-    def call(self, function_name: str, *args: any, timeout: int = 30) -> tuple[any, any]:
+    def call(self, function_name: str, *args: any, timeout: int = 30) -> tuple[any, any, any]:
         return self.eval(self._create_function_call(function_name, *args), timeout)

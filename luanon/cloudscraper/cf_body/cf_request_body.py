@@ -15,45 +15,18 @@ from .cf_lz_string import CfLzString
 
 @dataclass
 class CfRequestBody(CfBaseBody):
-    value: str | dict
     secret_key: str
 
-    def __str__(self) -> str:
-        return self.value
-
     @override
-    def encode(self) -> str:
+    def encode(self, value: dict) -> str:
         # Convert to javascript JSON object
-        json_value = json.dumps(self.value, separators=(",", ":"))
+        json_value = json.dumps(value, separators=(",", ":"))
         cf_lz_string = CfLzString(self.secret_key)
-        self.value = cf_lz_string.text_to_base64(json_value)
-        return self.value
+        value = cf_lz_string.text_to_base64(json_value)
+        return value
 
     @override
-    def decode(self) -> dict:
+    def decode(self, value: str) -> dict:
         cf_lz_string = CfLzString(self.secret_key)
-        self.value = json.loads(cf_lz_string.base64_to_text(self.value))
-        return self.value
-
-
-""" Ví dụ
-
-value = "test"
-secret_key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
-
-cf_request_body = CfRequestBody(value, secret_key)
-print(cf_request_body)
-# test
-
-encoded_value = cf_request_body.encode()
-print(encoded_value)
-# EQFwpgzixA==
-
-decoded_value = cf_request_body.decode()
-print(decoded_value)
-# test
-
-print(cf_request_body)
-# test
-
-"""
+        value = json.loads(cf_lz_string.base64_to_text(value))
+        return value

@@ -11,6 +11,6 @@ from dataclasses import dataclass
 class CfError:
     _github_repo_link: str = "https://github.com/luanon404/luanon"
 
-    cf_1020_error: str = "Cloudflare has blocked this request [1020] (Caused by User-Agent or Proxy)"
-    cf_solve_error: str = f"Change your User-Agent or use a Proxy, then try again. If the error persists, report it at {_github_repo_link}"
-    cf_challenge_error: str = "Failed to solve the challenge <{detail}>"
+    cf_1020_error: str = "Cloudflare đã chặn yêu cầu của bạn (lỗi 1020), vui lòng đổi User-Agent hoặc sử dụng proxy"
+    cf_solve_error: str = f"Lỗi không biết, Vui lòng đổi User-Agent hoặc sử dụng proxy, vẫn bị thì report tại {_github_repo_link}"
+    cf_challenge_error: str = "Giải thất bại <{detail}>"
